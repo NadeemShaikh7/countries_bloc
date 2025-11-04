@@ -44,9 +44,6 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Text(
-            'Countries',
-          ),
           Expanded(child: BlocBuilder<CountryBloc, CountryState>(builder: (context,state){
             print(state);
             if( state is CountryError){
