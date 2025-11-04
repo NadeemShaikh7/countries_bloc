@@ -6,7 +6,7 @@ class GetCountries{
 
   GetCountries(this.repositoryImpl);
 
-  Future<List<Countries>> call(String? name){
-    return repositoryImpl.getCountires(name);
+  Future<List<Countries>> call(){
+    return repositoryImpl.getCountries();
   }
 }

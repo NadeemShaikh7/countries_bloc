@@ -31,10 +31,12 @@ class _HomePageState extends State<HomePage> {
               height: 50,
             ),
             ListTile(title: Text("Get By Name"),onTap: (){
-              final bloc = context.read<CountryBloc>().add(ResetCountriesEvent());
+              context.read<CountryBloc>().add(ResetCountriesEvent());
               Navigator.push(context, MaterialPageRoute(builder: (_){
                 return GetByNameScreen();
-              }));
+              })).then((value) {
+                context.read<CountryBloc>().add(GetAllCountriesEvent());
+              },);
             },),
           ],
         ),
@@ -46,6 +48,7 @@ class _HomePageState extends State<HomePage> {
             'Countries',
           ),
           Expanded(child: BlocBuilder<CountryBloc, CountryState>(builder: (context,state){
+            print(state);
             if( state is CountryError){
               return Center(child: Text("error loading data - ${state.error}"));
             }
@@ -64,7 +67,9 @@ class _HomePageState extends State<HomePage> {
                   title: Text(state.countries[index].name ?? ""),
                   subtitle: Text(state.countries[index].capital ?? ""),
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (_)=> DetailsScreen(country: state.countries[index])));
+                    Navigator.push(context, MaterialPageRoute(builder: (_)=> DetailsScreen(country: state.countries[index]))).then((onValue){
+
+                    });
                   },
                 );
               },

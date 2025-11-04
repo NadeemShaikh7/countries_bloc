@@ -19,52 +19,64 @@ class GetByNameScreen extends StatefulWidget{
 class _GetByNameState extends State<GetByNameScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Get By Name"),
-      ),
-      body: Column(
-        children: [
-          TextField(controller: widget.textEditingController,onSubmitted: (value){
-            // context.read<CountryBloc>().close();
-            context.read<CountryBloc>().add(GetCountryEvent(value));
-          },),
-          SizedBox(height: 20,),
-          Expanded(child: BlocBuilder<CountryBloc, CountryState>(builder: (context,state){
-            if (state is CountryInitial) {
-              return Center(child: Text('Search for a country to begin.'));
-            }if( state is CountryError){
-              return Center(child: Text("error loading data - ${state.error}"));
-            }
-            else if(state is CountrySuccess){
-              return ListView.builder(itemBuilder: (context,index){
-                return ListTile(
-                  leading: (state.countries[index].flag != null) ? SizedBox(
-                    width: 80,
-                    height: 40,
-                    child: SvgPicture.network(
-                      state.countries[index].flag!,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                      : Icon(Icons.flag),
-                  title: Text(state.countries[index].name ?? ""),
-                  subtitle: Text(state.countries[index].capital ?? ""),
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (_)=> DetailsScreen(country: state.countries[index])));
-                  },
-                );
-              },
-                itemCount: state.countries.length,);
-            }else{
-              return Center(child: CircularProgressIndicator());
-            }
-          })),
-        ],
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (bool didPop, Object? result) async{
+        if(didPop) {
+          final NavigatorState navigatorState = Navigator.of(context);
+          context.read<CountryBloc>().add(ResetCountriesEvent());
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text("Get By Name"),
+        ),
+        body: Column(
+          children: [
+            TextField(controller: widget.textEditingController,onSubmitted: (value){
+              // context.read<CountryBloc>().close();
+              context.read<CountryBloc>().add(GetCountryEvent(value));
+            },),
+            SizedBox(height: 20,),
+            Expanded(child: BlocBuilder<CountryBloc, CountryState>(builder: (context,state){
+              print(state);
+              if (state is CountryInitial) {
+                return Center(child: Text('Search for a country to begin.'));
+              }if( state is CountryError){
+                return Center(child: Text("error loading data - ${state.error}"));
+              }
+              else if(state is SpecificCountrySuccess){
+                return ListView.builder(itemBuilder: (context,index){
+                  return ListTile(
+                    leading: (state.countries[index].flag != null) ? SizedBox(
+                      width: 80,
+                      height: 40,
+                      child: SvgPicture.network(
+                        state.countries[index].flag!,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                        : Icon(Icons.flag),
+                    title: Text(state.countries[index].name ?? ""),
+                    subtitle: Text(state.countries[index].capital ?? ""),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=> DetailsScreen(country: state.countries[index])));
+                    },
+                  );
+                },
+                  itemCount: state.countries.length,);
+              }else{
+                return Center(child: CircularProgressIndicator());
+              }
+            })),
+          ],
+        ),
       ),
     );
   }
+
+
 
   @override
   void dispose() {

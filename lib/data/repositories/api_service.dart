@@ -3,14 +3,8 @@ import 'dart:convert';
 import 'package:countires_bloc/data/model/country_model.dart';
 import 'package:http/http.dart' as http;
 class ApiService{
-  Future<List<CountryModel>?> getCountries(String? name) async{
-    late final Uri uri;
-    if(name == null){
-      uri = Uri.https('apicountries.com','/countries');
-    }else{
-      uri = Uri.https('apicountries.com','/name/$name');
-    }
-
+  Future<List<CountryModel>?> getCountries() async{
+    final Uri uri = Uri.https('apicountries.com','/countries');
 
     final response = await http.get(uri);
 
@@ -20,7 +14,6 @@ class ApiService{
         final countries = (data as List).map((countries) {
           return CountryModel.fromJson(countries);
         }).toList();
-        print(countries);
         return countries;
       }
     }catch(e){
@@ -31,7 +24,7 @@ class ApiService{
   }
 
 
-  Future<CountryModel?> getSpecificCountry(String country) async{
+  Future<List<CountryModel>?> getSpecificCountry(String country) async{
     final uri = Uri.https('apicountries.com','/name/$country');
 
     final response = await http.get(uri);
@@ -40,8 +33,10 @@ class ApiService{
     try{
       if(response.statusCode == 200){
         final data = jsonDecode(response.body);
-        print(response.body);
-        return CountryModel.fromJson(data);
+        final countries = (data as List).map((countries) {
+          return CountryModel.fromJson(countries);
+        }).toList();
+        return countries;
       }
     }catch(e){
       print(e.toString());

@@ -6,7 +6,7 @@ class GetSpecificCountry{
 
   GetSpecificCountry(this.repositoryImpl);
 
-  // Future<Countries?> call(String country){
-  //   return repositoryImpl.getSpecificCountry(country);
-  // }
+  Future<List<Countries>> call(String country){
+    return repositoryImpl.getSpecificCountries(country);
+  }
 }

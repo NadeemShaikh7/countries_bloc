@@ -14,7 +14,7 @@ class CountryBloc extends Bloc<CountryEvent, CountryState> {
     on<GetAllCountriesEvent>((event, emit) async{
       emit(CountryLoading());
       try{
-        final countries  = await getCountries(null);
+        final countries  = await getCountries();
         emit(CountrySuccess(countries));
       }catch(e){
         emit(CountryError(e.toString()));
@@ -23,8 +23,8 @@ class CountryBloc extends Bloc<CountryEvent, CountryState> {
     on<GetCountryEvent>((event, emit) async{
       emit(CountryLoading());
       try{
-        final countries  = await getCountries(event.countryName);
-        emit(CountrySuccess(countries));
+        final countries  = await getSpecificCountry(event.countryName);
+        emit(SpecificCountrySuccess(countries));
       }catch(e){
         emit(CountryError(e.toString()));
       }

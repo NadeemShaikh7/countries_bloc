@@ -15,3 +15,9 @@ final class CountryError extends CountryState {
 
   CountryError(this.error);
 }
+
+final class SpecificCountrySuccess extends CountryState {
+  final List<Countries> countries;
+
+  SpecificCountrySuccess(this.countries);
+}

@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => CountryBloc(getCountries,getSpecificCountry),
       child: MaterialApp(
+        navigatorObservers: [],
         title: 'Countries',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
